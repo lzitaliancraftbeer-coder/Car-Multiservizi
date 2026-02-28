@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CAR MULTISERVIZI | Extreme Experience</title>
+    <title>CAR MULTISERVIZI | Extreme Experience V2</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
@@ -20,26 +20,33 @@
             transition: transform 0.1s ease;
         }
 
-        /* Effetto Pittura Strisce */
+        /* Il Pittore (Background Layer) */
         .painter-container {
-            position: fixed; top: 0; left: 10%; width: 60px; height: 100vh;
-            background: rgba(255,255,255,0.03); z-index: 1;
+            position: fixed; top: 0; left: 5%; width: 50px; height: 100vh;
+            background: rgba(255,255,255,0.02); z-index: 0; /* Dietro al testo */
         }
         #road-stripe-draw {
             position: absolute; top: 0; left: 0; width: 100%; height: 0%;
-            background: var(--road-yellow); box-shadow: 0 0 20px var(--road-yellow);
+            background: var(--road-yellow); box-shadow: 0 0 30px rgba(255, 204, 0, 0.4);
         }
         .roller-head {
-            position: absolute; bottom: 0; left: -10px; width: 80px; height: 20px;
-            background: #333; border-radius: 5px; border-bottom: 4px solid #FFCC00;
+            position: absolute; bottom: 0; left: -15px; width: 80px; height: 10px;
+            background: #222; border-radius: 2px; box-shadow: 0 5px 15px rgba(0,0,0,0.5);
         }
 
-        .section-title { font-family: 'Syncopate', sans-serif; font-size: clamp(3rem, 10vw, 8rem); line-height: 0.8; }
+        /* Layout con Margine di Sicurezza */
+        section { 
+            min-height: 100vh; 
+            padding-left: clamp(80px, 15vw, 200px); /* Sposta il testo a destra della striscia */
+            padding-right: 5vw;
+            display: flex; flex-direction: column; justify-content: center;
+            position: relative; z-index: 10;
+        }
+
+        .section-title { font-family: 'Syncopate', sans-serif; font-size: clamp(2.5rem, 8vw, 7rem); line-height: 0.9; }
+        .card-reveal { opacity: 0; transform: translateX(30px); }
         
-        .card-reveal { opacity: 0; transform: translateY(50px); }
-        
-        footer { background: var(--road-yellow); color: black; padding: 100px 5%; position: relative; z-index: 10; }
-        .footer-logo { font-family: 'Syncopate', sans-serif; font-size: 15vw; opacity: 0.1; position: absolute; bottom: 0; left: 0; white-space: nowrap; pointer-events: none; }
+        footer { background: var(--road-yellow); color: black; padding: 100px 5%; position: relative; z-index: 20; }
     </style>
 </head>
 <body>
@@ -52,86 +59,75 @@
         </div>
     </div>
 
-    <nav class="fixed top-0 w-full z-[100] mix-blend-difference p-10 flex justify-between items-center">
+    <nav class="fixed top-0 w-full z-[100] mix-blend-difference p-8 flex justify-between items-center">
         <div class="font-black text-2xl tracking-tighter">CAR <span class="text-[#FFCC00]">MS.</span></div>
-        <div class="space-x-10 font-bold text-sm hidden md:block uppercase tracking-widest">
-            <a href="#home" class="nav-link">Inizio</a>
-            <a href="#servizi" class="nav-link">Servizi</a>
-            <a href="#contatti" class="nav-link">Contatti</a>
+        <div class="space-x-8 font-bold text-xs uppercase tracking-widest hidden md:block">
+            <a href="#home" class="hover:text-[#FFCC00]">Home</a>
+            <a href="#servizi" class="hover:text-[#FFCC00]">Servizi</a>
+            <a href="#footer" class="hover:text-[#FFCC00]">Contatti</a>
         </div>
     </nav>
 
-    <section id="home" class="min-h-screen flex items-center justify-center relative px-10">
-        <div class="z-10">
-            <p class="text-[#FFCC00] font-black tracking-[0.5em] mb-4 overflow-hidden"><span class="inline-block" id="tagline">SINCE 1998</span></p>
-            <h1 class="section-title" id="hero-h1">ROAD<br><span class="text-transparent" style="-webkit-text-stroke: 2px white;">MASTERS.</span></h1>
+    <section id="home">
+        <div class="max-w-4xl">
+            <p class="text-[#FFCC00] font-black tracking-[0.5em] mb-4 uppercase text-sm">Precisione Certificata</p>
+            <h1 class="section-title">DISEGNIAMO<br><span class="text-transparent" style="-webkit-text-stroke: 1px white;">IL FUTURO.</span></h1>
+            <p class="mt-8 text-gray-400 max-w-md">Dal 1998, tracciamo le linee che rendono le strade più sicure e le città più intelligenti.</p>
         </div>
     </section>
 
-    <section id="servizi" class="min-h-screen py-32 px-10 relative">
-        <div class="max-w-6xl mx-auto">
-            <h2 class="text-6xl font-black mb-20 italic">DISEGNIAMO SICUREZZA.</h2>
-            
-            <div class="grid md:grid-cols-2 gap-20">
-                <div class="card-reveal p-10 border-t-2 border-[#FFCC00] bg-white/5">
-                    <h3 class="text-3xl font-bold mb-4 uppercase">Segnaletica Orizzontale</h3>
-                    <p class="text-gray-400">Vernici ad alta rifrangenza applicate con precisione robotica per la massima durata.</p>
-                </div>
-                <div class="card-reveal p-10 border-t-2 border-[#FFCC00] bg-white/5">
-                    <h3 class="text-3xl font-bold mb-4 uppercase">Sistemi Smart City</h3>
-                    <p class="text-gray-400">Parchimetri IoT e gestione parcheggi automatizzata per comuni all'avanguardia.</p>
-                </div>
-                <div class="card-reveal p-10 border-t-2 border-[#FFCC00] bg-white/5">
-                    <h3 class="text-3xl font-bold mb-4 uppercase">Cantieristica</h3>
-                    <p class="text-gray-400">Messa in sicurezza totale di aree urbane ed extraurbane con segnaletica temporanea.</p>
-                </div>
-                <div class="card-reveal p-10 border-t-2 border-[#FFCC00] bg-white/5">
-                    <h3 class="text-3xl font-bold mb-4 uppercase">Arredo Urbano</h3>
-                    <p class="text-gray-400">Dissuasori, barriere e protezioni dal design moderno e materiali ultra-resistenti.</p>
-                </div>
+    <section id="servizi" class="bg-[#0a0a0a]/50">
+        <h2 class="text-4xl md:text-6xl font-black mb-16 italic">I NOSTRI ASSET.</h2>
+        
+        <div class="grid md:grid-cols-2 gap-10 max-w-5xl">
+            <div class="card-reveal p-8 border-l-4 border-[#FFCC00] bg-white/5 backdrop-blur-sm hover:bg-white/10 transition">
+                <h3 class="text-2xl font-bold mb-3 uppercase">Segnaletica</h3>
+                <p class="text-sm text-gray-400">Tracciamento ad alta precisione con vernici riflettenti omologate CE.</p>
+            </div>
+            <div class="card-reveal p-8 border-l-4 border-[#FFCC00] bg-white/5 backdrop-blur-sm hover:bg-white/10 transition">
+                <h3 class="text-2xl font-bold mb-3 uppercase">Smart Parking</h3>
+                <p class="text-sm text-gray-400">Parchimetri digitali e sensori di occupazione in tempo reale.</p>
+            </div>
+            <div class="card-reveal p-8 border-l-4 border-[#FFCC00] bg-white/5 backdrop-blur-sm hover:bg-white/10 transition">
+                <h3 class="text-2xl font-bold mb-3 uppercase">Urban Security</h3>
+                <p class="text-sm text-gray-400">Dossi, rallentatori e messa in sicurezza aree pedonali.</p>
+            </div>
+            <div class="card-reveal p-8 border-l-4 border-[#FFCC00] bg-white/5 backdrop-blur-sm hover:bg-white/10 transition">
+                <h3 class="text-2xl font-bold mb-3 uppercase">Cantieristica</h3>
+                <p class="text-sm text-gray-400">Allestimento rapido di cantieri stradali e autostradali.</p>
             </div>
         </div>
     </section>
 
-    <footer id="contatti">
-        <div class="grid md:grid-cols-3 gap-20 relative z-10">
+    <footer id="footer">
+        <div class="grid md:grid-cols-3 gap-12">
             <div>
-                <h4 class="font-black text-2xl mb-6">CAR MULTISERVIZI</h4>
-                <p>Sede Legale: Via delle Strade, 123<br>Roma (RM)</p>
+                <h4 class="font-black text-xl mb-4">CAR MULTISERVIZI</h4>
+                <p class="text-sm opacity-70 italic font-bold text-black">Sicurezza in movimento.</p>
             </div>
             <div>
-                <h4 class="font-black text-2xl mb-6">CONTATTI</h4>
-                <p>Email: info@carmultiservizi.it<br>Tel: +39 0123 456789</p>
+                <h4 class="font-black text-xl mb-4">HEADQUARTER</h4>
+                <p class="text-sm">Via dell'Industria, 45<br>00100 Roma (RM)</p>
             </div>
             <div>
-                <h4 class="font-black text-2xl mb-6">SOCIAL</h4>
-                <div class="flex gap-4">
-                    <a href="#" class="hover:underline">LinkedIn</a>
-                    <a href="#" class="hover:underline">Instagram</a>
-                </div>
+                <h4 class="font-black text-xl mb-4">MAIL US</h4>
+                <p class="text-sm font-bold">info@carmultiservizi.it</p>
+                <p class="text-sm">+39 06 1234567</p>
             </div>
         </div>
-        
-        <div class="mt-40 pt-10 border-t border-black/20 flex justify-between items-end relative z-10">
-            <p class="text-sm font-bold uppercase">© 2026 Car Multiservizi - All Rights Reserved</p>
-            <div class="text-right">
-                <p class="text-4xl font-black italic">GUIDIAMO IL FUTURO.</p>
-            </div>
-        </div>
-        
-        <div class="footer-logo text-black">CAR MULTISERVIZI</div>
+        <div class="mt-32 text-[10vw] font-black leading-none opacity-10 uppercase select-none">ROAD SAFETY</div>
     </footer>
 
     <script>
         gsap.registerPlugin(ScrollTrigger);
 
-        // 1. Cursor Follower
+        // Cursor
         const cursor = document.querySelector("#custom-cursor");
         window.addEventListener("mousemove", (e) => {
             gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1 });
         });
 
-        // 2. L'animazione dell'uomo che pittura (Striscia Gialla che scende)
+        // Animazione Pittura (Risolto l'overlap con padding nel CSS)
         gsap.to("#road-stripe-draw", {
             height: "100%",
             ease: "none",
@@ -139,43 +135,29 @@
                 trigger: "body",
                 start: "top top",
                 end: "bottom bottom",
-                scrub: 0.5
+                scrub: 0.2
             }
         });
 
-        // 3. Hero Entrance
-        const tl = gsap.timeline();
-        tl.from("#hero-h1", { x: -200, opacity: 0, duration: 1.5, ease: "expo.out" })
-          .from("#tagline", { y: 50, opacity: 0, duration: 1 }, "-=1");
-
-        // 4. Reveal Cards
-        gsap.utils.toArray(".card-reveal").forEach(card => {
+        // Reveal Cards con leggero stagger
+        gsap.utils.toArray(".card-reveal").forEach((card, i) => {
             gsap.to(card, {
                 opacity: 1,
-                y: 0,
+                x: 0,
                 duration: 1,
                 scrollTrigger: {
                     trigger: card,
-                    start: "top 85%",
+                    start: "top 90%",
                 }
             });
         });
 
-        // 5. Parallasse Testo Footer
-        gsap.to(".footer-logo", {
-            x: "20%",
-            scrollTrigger: {
-                trigger: "footer",
-                start: "top bottom",
-                scrub: 2
-            }
-        });
-
-        // Effetto Cursor Hover su link
-        const links = document.querySelectorAll('a, button');
-        links.forEach(link => {
-            link.addEventListener('mouseenter', () => gsap.to(cursor, { scale: 3, backgroundColor: "white" }));
-            link.addEventListener('mouseleave', () => gsap.to(cursor, { scale: 1, backgroundColor: "#FFCC00" }));
+        // Animazione Titolo
+        gsap.from(".section-title", {
+            y: 100,
+            opacity: 0,
+            duration: 1.5,
+            ease: "expo.out"
         });
     </script>
 </body>
