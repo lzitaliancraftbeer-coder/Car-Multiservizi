@@ -3,91 +3,205 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CAR MULTISERVIZI | Extreme Experience V3</title>
+    <title>CAR MULTISERVIZI | Extreme Experience V4</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Inter:wght@400;900&display=swap');
         
-        :root { --road-yellow: #FFCC00; --asphalt: #080808; }
-        body { background-color: var(--asphalt); color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; cursor: none; }
+        :root { --road-yellow: #FFCC00; --asphalt: #0a0a0a; }
         
+        /* Reset & Base */
+        html { scroll-behavior: smooth; }
+        body { background-color: var(--asphalt); color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; margin: 0; }
+        
+        /* Cursore Custom Migliorato (Non nasconde più quello di sistema se preferisci) */
         #custom-cursor {
-            position: fixed; width: 20px; height: 20px; background: var(--road-yellow);
-            border-radius: 50%; pointer-events: none; z-index: 9999; mix-blend-mode: difference;
+            position: fixed; width: 30px; height: 30px; border: 2px solid var(--road-yellow);
+            border-radius: 50%; pointer-events: none; z-index: 10000;
+            transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, background 0.3s;
         }
 
-        /* IL PITTORE (Z-Index basso, ma visibile) */
-        .painter-container {
-            position: fixed; top: 0; left: 5%; width: 40px; height: 100vh;
-            background: rgba(255,255,255,0.02); z-index: 1;
+        /* IL PITTORE - STRISCIA GIALLA ULTRA VISIBILE */
+        .painter-track {
+            position: fixed; top: 0; left: 60px; width: 40px; height: 100vh;
+            background: rgba(255,255,255,0.03); z-index: 2;
         }
         #road-stripe-draw {
             position: absolute; top: 0; left: 0; width: 100%; height: 0%;
-            background: var(--road-yellow); box-shadow: 0 0 40px rgba(255, 204, 0, 0.5);
+            background: var(--road-yellow); 
+            box-shadow: 0 0 30px rgba(255, 204, 0, 0.6);
+            border-bottom: 5px solid white;
         }
-        .roller-head {
-            position: absolute; bottom: 0; left: -10px; width: 60px; height: 12px;
-            background: #222; border-radius: 2px;
+        .roller-visual {
+            position: absolute; bottom: -10px; left: -10px; width: 60px; height: 20px;
+            background: #444; border-radius: 4px; border: 2px solid #666;
         }
 
-        /* LAYOUT PROTETTO */
+        /* LAYOUT - SPAZIATURA PROTETTA */
         section { 
             min-height: 100vh; 
-            padding-left: clamp(100px, 20vw, 300px); 
-            padding-right: 10vw;
+            padding-left: 150px; /* Spazio per la striscia */
+            padding-right: 5vw;
             display: flex; flex-direction: column; justify-content: center;
             position: relative; z-index: 10;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
         }
 
-        .section-title { font-family: 'Syncopate', sans-serif; font-size: clamp(2rem, 6vw, 5rem); line-height: 1; margin-bottom: 2rem; }
-        .reveal-element { opacity: 0; transform: translateY(30px); }
+        .section-title { font-family: 'Syncopate', sans-serif; font-size: clamp(2rem, 8vw, 5rem); line-height: 1; margin-bottom: 1.5rem; }
+        .reveal-element { opacity: 0; transform: translateY(40px); }
+
+        /* Navbar Glass */
+        nav {
+            background: rgba(10, 10, 10, 0.8); backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        footer { background: var(--road-yellow); color: black; z-index: 20; position: relative; }
         
-        .stat-card { border-left: 1px solid var(--road-yellow); padding: 20px; background: rgba(255,255,255,0.02); }
-
-        footer { 
-            background: var(--road-yellow); color: black; 
-            padding: 100px clamp(50px, 10vw, 150px); 
-            position: relative; z-index: 20; 
+        @media (max-width: 768px) {
+            section { padding-left: 80px; }
+            .painter-track { left: 20px; width: 25px; }
         }
-        .nav-link:hover { color: var(--road-yellow); letter-spacing: 0.1em; transition: all 0.3s; }
     </style>
 </head>
 <body>
 
     <div id="custom-cursor"></div>
 
-    <div class="painter-container">
-        <div id="road-stripe-draw"><div class="roller-head"></div></div>
+    <div class="painter-track">
+        <div id="road-stripe-draw">
+            <div class="roller-visual"></div>
+        </div>
     </div>
 
-    <nav class="fixed top-0 w-full z-[100] mix-blend-difference p-8 flex justify-between items-center">
-        <div class="font-black text-2xl">CAR <span class="text-[#FFCC00]">MULTISERVIZI</span></div>
-        <div class="space-x-8 font-bold text-[10px] uppercase tracking-[0.3em] hidden lg:block">
-            <a href="#home" class="nav-link">Home</a>
-            <a href="#about" class="nav-link">Azienda</a>
-            <a href="#servizi" class="nav-link">Servizi</a>
-            <a href="#numeri" class="nav-link">Numeri</a>
-            <a href="#contatti" class="nav-link">Contatti</a>
+    <nav class="fixed top-0 w-full z-[100] px-8 py-4 flex justify-between items-center">
+        <div class="font-black text-xl tracking-tighter text-[#FFCC00]">CAR <span class="text-white">MULTISERVIZI</span></div>
+        <div class="hidden md:flex space-x-8 font-bold text-[10px] uppercase tracking-widest">
+            <a href="#home" class="hover:text-[#FFCC00] transition">Home</a>
+            <a href="#azienda" class="hover:text-[#FFCC00] transition">Azienda</a>
+            <a href="#servizi" class="hover:text-[#FFCC00] transition">Servizi</a>
+            <a href="#footer" class="hover:text-[#FFCC00] transition">Contatti</a>
         </div>
     </nav>
 
     <section id="home">
         <div class="reveal-element" style="opacity:1; transform:none;">
-            <p class="text-[#FFCC00] font-black tracking-[0.5em] mb-4 uppercase text-xs">Security & Infrastructure</p>
-            <h1 class="section-title">SEGNIAMO <br>LA <span class="text-transparent" style="-webkit-text-stroke: 1px white;">STRADA.</span></h1>
-            <p class="text-gray-400 max-w-lg text-lg">Esperti nella segnaletica stradale e nella gestione di parcheggi intelligenti. Dal 1998, qualità e sicurezza su ogni chilometro.</p>
+            <h1 class="section-title">SICUREZZA <br><span class="text-transparent" style="-webkit-text-stroke: 1px white;">IN CORSO.</span></h1>
+            <p class="text-gray-400 max-w-lg text-lg mb-8">Specialisti in segnaletica stradale e infrastrutture urbane dal 1998.</p>
+            <a href="#servizi" class="bg-[#FFCC00] text-black px-8 py-3 font-black inline-block uppercase text-sm">Scopri i Servizi</a>
         </div>
     </section>
 
-    <section id="about" class="bg-[#0a0a0a]">
-        <h2 class="section-title text-[#FFCC00]">CHI SIAMO</h2>
+    <section id="azienda">
+        <h2 class="section-title text-[#FFCC00]">L'AZIENDA</h2>
         <div class="grid lg:grid-cols-2 gap-12 reveal-element">
-            <div class="text-xl leading-relaxed">
-                <p>La **Car Multiservizi** non è solo un'azienda di segnaletica. Siamo i partner dei comuni e delle imprese che vogliono infrastrutture moderne, sicure e tecnologiche.</p>
-                <p class="mt-6 text-gray-500 text-base">Utilizziamo vernici ad alta rifrangenza e sistemi di monitoraggio IoT per trasformare le strade in percorsi intelligenti.</p>
+            <p class="text-xl leading-relaxed">Con oltre 25 anni di esperienza, Car Multiservizi garantisce precisione millimetrica in ogni tracciato, utilizzando tecnologie laser e vernici eco-compatibili certificate.</p>
+            <div class="border-l-2 border-[#FFCC00] pl-6 italic text-gray-400">
+                "La nostra missione è rendere ogni strada un luogo più sicuro, un centimetro alla volta."
             </div>
-            <div class="grid grid-cols-2 gap-4">
-                <div class="stat-card"><h4 class="text-3xl font-black text-[#FFCC00]">25+</h4><p class="text-
+        </div>
+    </section>
+
+    <section id="servizi">
+        <h2 class="section-title">SERVIZI</h2>
+        <div class="grid md:grid-cols-2 gap-4 reveal-element">
+            <div class="bg-white/5 p-8 border border-white/10 hover:border-[#FFCC00] transition-all">
+                <h3 class="text-xl font-black text-[#FFCC00] mb-2 uppercase">Segnaletica Orizzontale</h3>
+                <p class="text-sm text-gray-400">Dalle autostrade ai centri storici, tracciamo il futuro della viabilità.</p>
+            </div>
+            <div class="bg-white/5 p-8 border border-white/10 hover:border-[#FFCC00] transition-all">
+                <h3 class="text-xl font-black text-[#FFCC00] mb-2 uppercase">Smart City</h3>
+                <p class="text-sm text-gray-400">Gestione parcheggi e installazione sistemi di pagamento intelligenti.</p>
+            </div>
+            <div class="bg-white/5 p-8 border border-white/10 hover:border-[#FFCC00] transition-all">
+                <h3 class="text-xl font-black text-[#FFCC00] mb-2 uppercase">Segnaletica Verticale</h3>
+                <p class="text-sm text-gray-400">Fornitura e posa di cartellonistica omologata ad alta visibilità.</p>
+            </div>
+            <div class="bg-white/5 p-8 border border-white/10 hover:border-[#FFCC00] transition-all">
+                <h3 class="text-xl font-black text-[#FFCC00] mb-2 uppercase">Pronto Intervento</h3>
+                <p class="text-sm text-gray-400">Manutenzione rapida e ripristino sicurezza post-emergenza.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer id="footer" class="py-20 px-8 lg:px-[150px]">
+        <div class="grid md:grid-cols-3 gap-12">
+            <div>
+                <h4 class="font-black text-2xl mb-4">CAR MULTISERVIZI</h4>
+                <p class="text-sm uppercase font-bold tracking-widest">Segnaletica e Servizi</p>
+            </div>
+            <div>
+                <h5 class="font-black uppercase mb-4 text-xs">Contatti</h5>
+                <p>info@carmultiservizi.it</p>
+                <p>+39 06 123 456 78</p>
+            </div>
+            <div>
+                <h5 class="font-black uppercase mb-4 text-xs">Sede</h5>
+                <p>Via Roma, 100<br>00100 Roma (RM)</p>
+            </div>
+        </div>
+        <div class="mt-20 pt-8 border-t border-black/10 text-[10px] font-bold">
+            © 2026 CAR MULTISERVIZI - P.IVA 0123456789
+        </div>
+    </footer>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        // 1. Cursore Migliorato
+        const cursor = document.querySelector("#custom-cursor");
+        document.addEventListener("mousemove", (e) => {
+            gsap.to(cursor, { 
+                x: e.clientX, 
+                y: e.clientY, 
+                duration: 0.15,
+                ease: "power2.out"
+            });
+        });
+
+        // Effetto hover sui link per il cursore
+        document.querySelectorAll('a, button').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                gsap.to(cursor, { scale: 1.5, background: "rgba(255, 204, 0, 0.3)", border: "1px solid white" });
+            });
+            el.addEventListener('mouseleave', () => {
+                gsap.to(cursor, { scale: 1, background: "transparent", border: "2px solid #FFCC00" });
+            });
+        });
+
+        // 2. Animazione Pittura Striscia (Fissata)
+        gsap.to("#road-stripe-draw", {
+            height: "100%",
+            ease: "none",
+            scrollTrigger: {
+                trigger: "body",
+                start: "top top",
+                end: "bottom bottom",
+                scrub: 0.3
+            }
+        });
+
+        // 3. Reveal degli elementi al caricamento e allo scroll
+        gsap.utils.toArray(".reveal-element").forEach(el => {
+            gsap.to(el, {
+                opacity: 1,
+                y: 0,
+                duration: 1,
+                scrollTrigger: {
+                    trigger: el,
+                    start: "top 85%",
+                }
+            });
+        });
+
+        // 4. Hero Animation iniziale
+        gsap.from(".section-title", {
+            opacity: 0,
+            x: -50,
+            duration: 1.5,
+            ease: "power4.out"
+        });
+    </script>
+</body>
+</html>
